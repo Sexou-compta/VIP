@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>VIP Club · طباعة الكودات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="js/qrcode.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Cairo,Tahoma,sans-serif;background:#0b0b0f;color:#eee}
+.bar{padding:14px;background:#14141c;border-bottom:2px solid #d4af37;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar h1{margin:0 0 0 auto;font-size:18px;color:#d4af37}
+input,select,button{font:inherit;padding:9px 12px;border-radius:8px;border:1px solid #333;background:#0f0f15;color:#eee}
+button{background:#d4af37;color:#111;border:0;font-weight:700;cursor:pointer}
+label{display:flex;align-items:center;gap:6px;font-size:14px}
+#info{padding:10px 14px;color:#aaa;font-size:14px}
+/* sheet */
+#sheet{display:grid;grid-template-columns:1fr 1fr;gap:0;width:210mm;margin:12px auto;background:#fff;color:#111;padding:6mm}
+.card{height:55mm;border:1px dashed #999;padding:3.5mm 4mm;display:flex;gap:3mm;align-items:center;break-inside:avoid;page-break-inside:avoid;position:relative}
+.card .l{flex:1;min-width:0}
+.card .top{display:flex;align-items:center;gap:2mm;margin-bottom:1mm}
+.card .top img{width:9mm;height:9mm;border-radius:50%}
+.card .top b{font-size:11pt;letter-spacing:.5px}
+.card .nm{font-size:12pt;font-weight:900;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .gp{font-size:9pt;color:#555}
+.card .cd{direction:ltr;text-align:center;font-family:'Courier New',monospace;font-weight:900;font-size:21pt;letter-spacing:3px;
+  border:1.5px solid #111;border-radius:2mm;margin:1.5mm 0;padding:.5mm 0}
+.card .st{font-size:7.2pt;line-height:1.45;color:#333}
+.card .q{width:30mm;flex:none;text-align:center}
+.card .q svg{width:30mm;height:30mm;display:block}
+.card .q small{font-size:6.5pt;color:#555}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .bar,#info{display:none}
+  #sheet{margin:0;width:210mm}
+}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>🖨 طباعة الكودات</h1>
+  <input id="pw" type="password" placeholder="كلمة السر">
+  <select id="grp"><option value="">الكل</option></select>
+  <label><input type="checkbox" id="onlyNew" checked> غير اللي ما دخلوش مزال</label>
+  <button id="load">جيب</button>
+  <button id="prt">Imprimer / PDF</button>
+</div>
+<div id="info">اكتب كلمة السر وانقر «جيب».</div>
+<div id="sheet"></div>
+<script>
+const API = "https://vip-club.abdelmalekilyes213.workers.dev";
+const APP = "https://sexou-compta.github.io/VIP/";
+let ALL = [];
+const $ = (id) => document.getElementById(id);
+try { $("pw").value = sessionStorage.getItem("pw") || ""; } catch (e) {}
+function esc(s) { const d = document.createElement("div"); d.textContent = s == null ? "" : String(s); return d.innerHTML; }
+function qrSvg(text) {
+  const q = qrcode(0, "M"); q.addData(text); q.make();
+  return q.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+}
+async function load() {
+  $("info").textContent = "…";
+  try {
+    const r = await fetch(API + "/api/admin/list", { headers: { "X-Admin-Password": $("pw").value } });
+    const j = await r.json();
+    if (!j.ok) { $("info").textContent = "كلمة السر غالطة."; return; }
+    try { sessionStorage.setItem("pw", $("pw").value); } catch (e) {}
+    ALL = j.students;
+    const groups = [...new Set(ALL.map((s) => s.grp))].sort();
+    const cur = $("grp").value;
+    $("grp").innerHTML = '<option value="">الكل</option>' + groups.map((g) => '<option' + (g === cur ? " selected" : "") + ">" + esc(g) + "</option>").join("");
+    render();
+  } catch (e) { $("info").textContent = "ما كانش أنترنت."; }
+}
+function render() {
+  const g = $("grp").value, onlyNew = $("onlyNew").checked;
+  const L = ALL.filter((s) => s.status === "active" && (!g || s.grp === g) && (!onlyNew || !s.linked));
+  $("info").textContent = L.length + " بطاقة · " + Math.ceil(L.length / 10) + " ورقة A4";
+  $("sheet").innerHTML = L.map((s) =>
+    '<div class="card"><div class="l">' +
+    '<div class="top"><img src="img/icon-192.png" alt=""><b>VIP Club</b></div>' +
+    '<div class="nm">' + esc(s.name) + '</div><div class="gp">الفوج ' + esc(s.grp) + '</div>' +
+    '<div class="cd">' + esc(s.code) + '</div>' +
+    '<div class="st">1) صوّر الـ QR بالكاميرا ← انقر «دخول»<br>2) ركّب التطبيق: ⋮ ← Installer<br>⚠️ الكود يخدم في تليفون واحد برك</div>' +
+    '</div><div class="q">' + qrSvg(APP + "?c=" + s.code) + '<small>sexou-compta.github.io/VIP</small></div></div>'
+  ).join("");
+}
+$("load").onclick = load;
+$("grp").onchange = render;
+$("onlyNew").onchange = render;
+$("pw").addEventListener("keydown", (e) => { if (e.key === "Enter") load(); });
+$("prt").onclick = () => window.print();
+if ($("pw").value) load();
+</script>
+</body>
+</html>

@@ -171,6 +171,17 @@ $("code").addEventListener("keydown", (e) => { if (e.key === "Enter") doLogin();
 $("code").addEventListener("input", (e) => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""); });
 
 async function boot() {
+  // كود جاي من QR: نكتبوه في الخانة ونمسحوه من الرابط
+  const qp = new URLSearchParams(location.search).get("c");
+  if (qp) {
+    history.replaceState(null, "", location.pathname + location.hash);
+    if (!store.get("vip_code")) {
+      showLogin();
+      $("code").value = qp.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+      $("err").textContent = "";
+      return;
+    }
+  }
   const code = store.get("vip_code");
   const saved = store.get("vip_user");
   if (!code || !saved) { showLogin(); return; }
