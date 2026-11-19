@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff1b8"/>
+      <stop offset="0.45" stop-color="#e8c25a"/>
+      <stop offset="1" stop-color="#a87b1f"/>
+    </linearGradient>
+    <radialGradient id="bg" cx="0.5" cy="0.35" r="0.75">
+      <stop offset="0" stop-color="#1f1a10"/>
+      <stop offset="1" stop-color="#050505"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="0" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="228" fill="none" stroke="url(#g)" stroke-width="6"/>
+  <circle cx="256" cy="256" r="214" fill="none" stroke="#e8c25a" stroke-opacity="0.25" stroke-width="2"/>
+  <!-- crown -->
+  <g transform="translate(256 150)">
+    <path d="M-78 40 L-92 -38 L-46 2 L0 -58 L46 2 L92 -38 L78 40 Z" fill="url(#g)"/>
+    <rect x="-80" y="48" width="160" height="16" rx="4" fill="url(#g)"/>
+    <circle cx="-92" cy="-44" r="10" fill="url(#g)"/>
+    <circle cx="0" cy="-66" r="11" fill="url(#g)"/>
+    <circle cx="92" cy="-44" r="10" fill="url(#g)"/>
+  </g>
+  <text x="256" y="335" text-anchor="middle" font-family="Archivo Black" font-size="150" fill="url(#g)" letter-spacing="4">VIP</text>
+  <line x1="150" y1="365" x2="362" y2="365" stroke="#e8c25a" stroke-opacity="0.6" stroke-width="2"/>
+  <text x="262" y="412" text-anchor="middle" font-family="Fira Sans" font-weight="600" font-size="40" fill="#e8c25a" letter-spacing="18">CLUB</text>
+</svg>

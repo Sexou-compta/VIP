@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0907">
+<title>VIP Club · أستاذ الشارع</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0907;--card:#15130f;--line:#2b261c;--gold:#e8c25a;--gold2:#a87b1f;--txt:#f1ece0;--mut:#9a927f;--red:#e5534b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Cairo,Tahoma,sans-serif}
+body{min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+button{font-family:inherit}
+.gold{background:linear-gradient(180deg,#fff1b8,#e8c25a 45%,#a87b1f);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* login */
+#login{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;
+ background:radial-gradient(ellipse at 50% 20%,#231c0e 0%,#0a0907 65%)}
+#login img{width:150px;height:150px;border-radius:50%;box-shadow:0 0 60px #e8c25a33}
+#login h1{margin:18px 0 4px;font-size:26px;font-weight:900}
+#login p{margin:0 0 26px;color:var(--mut);font-size:15px}
+#code{width:100%;max-width:300px;font-family:monospace;font-size:28px;letter-spacing:8px;text-align:center;text-transform:uppercase;
+ padding:14px;border-radius:14px;border:1.5px solid var(--line);background:#100e0b;color:var(--gold);outline:none;direction:ltr}
+#code:focus{border-color:var(--gold)}
+.btn{margin-top:14px;width:100%;max-width:300px;padding:14px;border:0;border-radius:14px;font-size:18px;font-weight:700;color:#1a1305;
+ background:linear-gradient(180deg,#f6d77c,#d4a838);cursor:pointer}
+.btn:disabled{opacity:.6}
+#err{min-height:24px;margin-top:14px;color:var(--red);font-weight:600;font-size:15px;max-width:320px}
+/* app */
+#app{display:none}
+header.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));
+ background:rgba(10,9,7,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top img{width:38px;height:38px;border-radius:50%}
+header.top .t{flex:1;line-height:1.2}
+header.top .t b{font-size:16px}
+header.top .t small{display:block;color:var(--mut);font-size:12px}
+.back{border:0;background:#1d1a14;color:var(--gold);width:38px;height:38px;border-radius:10px;font-size:20px;cursor:pointer}
+main{padding:16px;max-width:760px;margin:auto}
+.hello{padding:18px;border-radius:18px;margin-bottom:18px;border:1px solid #3a301a;
+ background:linear-gradient(135deg,#221b0c,#120f0a)}
+.hello h2{margin:0;font-size:22px}
+.hello span{color:var(--mut);font-size:14px}
+.sec{color:var(--mut);font-size:14px;font-weight:700;margin:6px 4px 10px}
+.lesson{display:flex;align-items:center;gap:14px;padding:16px;margin-bottom:12px;border-radius:16px;background:var(--card);border:1px solid var(--line);cursor:pointer}
+.lesson .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:#221c10;color:var(--gold);flex:none}
+.lesson .lt{flex:1}
+.lesson .lt b{font-size:17px;display:block}
+.lesson .lt small{color:var(--mut)}
+.lesson.lock{opacity:.45;cursor:default}
+.chev{color:var(--gold);font-size:20px}
+.ex{display:flex;align-items:center;gap:12px;padding:14px;margin-bottom:10px;border-radius:14px;background:var(--card);border:1px solid var(--line);cursor:pointer}
+.yr{flex:none;min-width:62px;text-align:center;padding:6px 8px;border-radius:10px;font-weight:900;font-size:17px;color:#1a1305;background:linear-gradient(180deg,#f6d77c,#d4a838)}
+.ex .et{flex:1;font-size:14px;line-height:1.5}
+.ex .et b{display:block;font-size:15px}
+.vtag{font-size:12px;color:var(--mut);white-space:nowrap}
+/* exercise */
+.ehead{padding:16px;border-radius:16px;margin-bottom:14px;background:linear-gradient(135deg,#221b0c,#120f0a);border:1px solid #3a301a}
+.ehead .yr{display:inline-block;margin-bottom:8px}
+.ehead h2{margin:0;font-size:18px;line-height:1.6}
+.body{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;font-size:16px;line-height:1.9}
+.body p{margin:0 0 8px}
+.body p.li{padding-right:6px}
+.body p.sub{margin-top:14px;color:var(--gold)}
+.body p.req{margin-top:16px;padding:8px 12px;border-radius:10px;background:#2a2110;color:var(--gold);display:inline-block}
+.tw{overflow-x:auto;margin:12px -4px 14px;-webkit-overflow-scrolling:touch}
+.tw table{border-collapse:collapse;min-width:100%;font-size:14px;line-height:1.5}
+.tw td,.tw th{border:1px solid #3a3326;padding:7px 9px;text-align:center;min-width:84px}
+.tw thead th,.tw thead td{background:#2a2110;color:var(--gold);font-weight:700}
+.n{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.video{margin-top:14px;padding:22px 16px;border-radius:16px;text-align:center;border:1.5px dashed #4a3d20;background:#100e0b;color:var(--mut)}
+.video b{display:block;color:var(--gold);font-size:17px;margin-bottom:4px}
+.nav{display:flex;gap:10px;margin-top:14px}
+.nav button{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:#1a1712;color:var(--txt);font-size:15px;cursor:pointer}
+.nav button:disabled{opacity:.3}
+.foot{text-align:center;color:#5d5747;font-size:12px;margin:26px 0 10px}
+.loading{text-align:center;color:var(--mut);padding:40px}
+</style>
+</head>
+<body>
+
+<section id="login">
+  <img src="img/icon-512.png" alt="VIP Club">
+  <h1 class="gold">VIP Club</h1>
+  <p>خاص بتلاميذ أستاذ الشارع المسجلين برك</p>
+  <input id="code" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="••••••" inputmode="text">
+  <button class="btn" id="go">دخول</button>
+  <div id="err"></div>
+</section>
+
+<section id="app">
+  <header class="top">
+    <button class="back" id="back" style="display:none">→</button>
+    <img src="img/icon-192.png" alt="">
+    <div class="t"><b id="htitle">VIP Club</b><small id="hsub">أستاذ الشارع · Gestion</small></div>
+  </header>
+  <main id="view"></main>
+</section>
+
+<script>
+const API = "https://vip-club.abdelmalekilyes213.workers.dev";
+const LESSONS = [
+  { id: "hasab-natayej", name: "حساب النتائج", icon: "📊", file: "data/hasab-natayej.json" },
+  { id: "mizania", name: "الميزانية", icon: "⚖️", soon: true },
+  { id: "qorud", name: "استهلاك القروض", icon: "🏦", soon: true },
+  { id: "tahliliya", name: "المحاسبة التحليلية", icon: "🧮", soon: true },
+];
+const $ = (id) => document.getElementById(id);
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} },
+};
+function deviceId() {
+  let d = store.get("vip_device");
+  if (!d) {
+    const a = new Uint8Array(16); crypto.getRandomValues(a);
+    d = "dev-" + Array.from(a, (b) => b.toString(16).padStart(2, "0")).join("");
+    store.set("vip_device", d);
+  }
+  return d;
+}
+const ERR = {
+  wrong_code: "الكود غالط. تأكد منو وعاود.",
+  used_elsewhere: "هذا الكود مستعمل في تليفون آخر. كلّم الأستاذ.",
+  blocked: "هذا الكود مقطوع. كلّم الأستاذ.",
+  bad_request: "اكتب الكود كامل (6 حروف).",
+  net: "ما كانش أنترنت. عاود من بعد.",
+};
+async function apiLogin(code) {
+  const r = await fetch(API + "/api/login", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code, device: deviceId() }),
+  });
+  return r.json();
+}
+function showLogin(msg) {
+  $("app").style.display = "none";
+  $("login").style.display = "flex";
+  $("err").textContent = msg || "";
+}
+let USER = null;
+function enterApp(u) {
+  USER = u;
+  $("login").style.display = "none";
+  $("app").style.display = "block";
+  route();
+}
+async function doLogin() {
+  const code = $("code").value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (code.length !== 6) { $("err").textContent = ERR.bad_request; return; }
+  $("go").disabled = true; $("err").textContent = "";
+  try {
+    const r = await apiLogin(code);
+    if (r.ok) {
+      store.set("vip_code", code);
+      store.set("vip_user", JSON.stringify({ name: r.name, grp: r.grp }));
+      enterApp({ name: r.name, grp: r.grp });
+    } else {
+      $("err").textContent = ERR[r.error] || "خطأ. عاود.";
+    }
+  } catch (e) { $("err").textContent = ERR.net; }
+  $("go").disabled = false;
+}
+$("go").onclick = doLogin;
+$("code").addEventListener("keydown", (e) => { if (e.key === "Enter") doLogin(); });
+$("code").addEventListener("input", (e) => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""); });
+
+async function boot() {
+  const code = store.get("vip_code");
+  const saved = store.get("vip_user");
+  if (!code || !saved) { showLogin(); return; }
+  let user; try { user = JSON.parse(saved); } catch (e) { user = null; }
+  if (!user) { showLogin(); return; }
+  try {
+    const r = await apiLogin(code);
+    if (r.ok) {
+      user = { name: r.name, grp: r.grp };
+      store.set("vip_user", JSON.stringify(user));
+      enterApp(user);
+    } else if (r.error === "blocked" || r.error === "used_elsewhere" || r.error === "wrong_code") {
+      store.del("vip_code"); store.del("vip_user");
+      showLogin(ERR[r.error]);
+    } else { enterApp(user); }
+  } catch (e) {
+    enterApp(user); // بلا أنترنت: يكمل بآخر دخول صحيح
+  }
+}
+
+const cache = {};
+async function loadLesson(l) {
+  if (cache[l.id]) return cache[l.id];
+  const r = await fetch(l.file, { cache: "no-cache" });
+  cache[l.id] = await r.json();
+  return cache[l.id];
+}
+function esc(s) { const d = document.createElement("div"); d.textContent = s == null ? "" : String(s); return d.innerHTML; }
+function setHeader(title, sub, back) {
+  $("htitle").textContent = title;
+  $("hsub").textContent = sub;
+  $("back").style.display = back ? "block" : "none";
+}
+$("back").onclick = () => history.back();
+
+async function route() {
+  if (!USER) return;
+  const h = location.hash.replace(/^#\/?/, "").split("/");
+  const v = $("view");
+  window.scrollTo(0, 0);
+  if (!h[0]) {
+    setHeader("VIP Club", "أستاذ الشارع · Gestion", false);
+    v.innerHTML =
+      '<div class="hello"><h2>مرحبا ' + esc(USER.name.split(" ")[0]) + ' 👑</h2><span>' + esc(USER.name) + ' · ' + esc(USER.grp) + '</span></div>' +
+      '<div class="sec">الدروس</div>' +
+      LESSONS.map((l) => l.soon
+        ? '<div class="lesson lock"><div class="ic">' + l.icon + '</div><div class="lt"><b>' + l.name + '</b><small>قريبا</small></div><span>🔒</span></div>'
+        : '<div class="lesson" data-go="#/l/' + l.id + '"><div class="ic">' + l.icon + '</div><div class="lt"><b>' + l.name + '</b><small>مواضيع BAC 2019 – 2026</small></div><span class="chev">‹</span></div>'
+      ).join("") +
+      '<div class="foot">VIP Club · أستاذ الشارع</div>';
+    return;
+  }
+  const l = LESSONS.find((x) => x.id === h[1] && !x.soon);
+  if (!l) { location.hash = ""; return; }
+  v.innerHTML = '<div class="loading">…</div>';
+  let data;
+  try { data = await loadLesson(l); } catch (e) { v.innerHTML = '<div class="loading">ما كانش أنترنت. عاود من بعد.</div>'; return; }
+  const exs = data.exercises;
+  if (h[0] === "l") {
+    setHeader(l.name, exs.length + " موضوع BAC", true);
+    v.innerHTML = exs.map((e) =>
+      '<div class="ex" data-go="#/e/' + l.id + '/' + e.n + '"><div class="yr">' + esc(e.year) + '</div><div class="et"><b>' + esc(e.title.replace(/^بكالوريا\s*\d{4}\s*[–-]\s*/, "")) + '</b></div><span class="vtag">🎥 قريبا</span></div>'
+    ).join("");
+    return;
+  }
+  if (h[0] === "e") {
+    const i = exs.findIndex((e) => String(e.n) === h[2]);
+    if (i < 0) { location.hash = "#/l/" + l.id; return; }
+    const e = exs[i];
+    setHeader(l.name, "BAC " + e.year, true);
+    v.innerHTML =
+      '<div class="ehead"><div class="yr">BAC ' + esc(e.year) + '</div><h2>' + esc(e.title) + '</h2></div>' +
+      '<div class="body">' + e.html + '</div>' +
+      '<div class="video"><b>🎥 التصحيح بالفيديو</b>قريب، يتزاد هنا</div>' +
+      '<div class="nav">' +
+      '<button ' + (i > 0 ? 'data-go="#/e/' + l.id + '/' + exs[i - 1].n + '"' : "disabled") + '>→ اللي قبل</button>' +
+      '<button ' + (i < exs.length - 1 ? 'data-go="#/e/' + l.id + '/' + exs[i + 1].n + '"' : "disabled") + '>اللي بعد ←</button>' +
+      '</div>';
+  }
+}
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-go]");
+  if (t) location.hash = t.dataset.go;
+});
+window.addEventListener("hashchange", route);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+boot();
+</script>
+</body>
+</html>
